@@ -1,5 +1,7 @@
 # Контактная книга
 
+[![CI](https://github.com/bishop777220/deepseekPoligon/actions/workflows/ci.yml/badge.svg)](https://github.com/bishop777220/deepseekPoligon/actions/workflows/ci.yml)
+
 Веб-приложение для ведения списка контактов: поиск, фильтрация по категориям, постраничный вывод,
 создание, редактирование и удаление записей. Полноценный CRUD-пример на стеке
 **Jakarta EE 10 / JSF 4 / CDI 4 / JPA 3.1 / MySQL 8 / Tomcat 10.1**.
@@ -204,13 +206,8 @@ contactbook/
 
 ## Репозиторий
 
-Проект оформлен как самостоятельный Git-репозиторий с веткой `main`.
-Публикация в удалённый репозиторий (GitHub, GitLab и т. п.):
-
-```bash
-git remote add origin <git-url>
-git push -u origin main
-```
+Проект размещён на GitHub: <https://github.com/bishop777220/deepseekPoligon>.
+Ветка по умолчанию — `main`, релиз отмечен тегом `v1.0.0`.
 
 ## Лицензия
 
