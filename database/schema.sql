@@ -3,21 +3,21 @@
 
 SET NAMES utf8mb4;
 
-CREATE DATABASE IF NOT EXISTS contactbook
+CREATE DATABASE IF NOT EXISTS testdeepseekv1
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
 
 -- Local Tomcat process
 CREATE USER IF NOT EXISTS 'contactbook'@'localhost' IDENTIFIED BY 'contactbook';
-GRANT ALL PRIVILEGES ON contactbook.* TO 'contactbook'@'localhost';
+GRANT ALL PRIVILEGES ON testdeepseekv1.* TO 'contactbook'@'localhost';
 
 -- Docker / remote clients
 CREATE USER IF NOT EXISTS 'contactbook'@'%' IDENTIFIED BY 'contactbook';
-GRANT ALL PRIVILEGES ON contactbook.* TO 'contactbook'@'%';
+GRANT ALL PRIVILEGES ON testdeepseekv1.* TO 'contactbook'@'%';
 
 FLUSH PRIVILEGES;
 
-USE contactbook;
+USE testdeepseekv1;
 
 CREATE TABLE IF NOT EXISTS contacts (
     id            BIGINT       NOT NULL AUTO_INCREMENT,

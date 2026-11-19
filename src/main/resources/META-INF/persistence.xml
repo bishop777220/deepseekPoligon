@@ -11,7 +11,7 @@
             <!-- Defaults; override with CONTACTBOOK_DB_* environment variables or -Dcontactbook.db.* -->
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="jakarta.persistence.jdbc.url"
-                      value="jdbc:mysql://localhost:3306/contactbook?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=UTC&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"/>
+                      value="jdbc:mysql://localhost:3306/testdeepseekv1?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=UTC"/>
             <property name="jakarta.persistence.jdbc.user" value="contactbook"/>
             <property name="jakarta.persistence.jdbc.password" value="contactbook"/>
 

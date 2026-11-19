@@ -45,7 +45,7 @@
 mysql -u root -p --default-character-set=utf8mb4 < database/schema.sql
 ```
 
-Скрипт создаёт базу `contactbook`, пользователя `contactbook` с паролем `contactbook`,
+Скрипт создаёт базу `testdeepseekv1`, пользователя `contactbook` с паролем `contactbook`,
 таблицу `contacts` и 12 демонстрационных записей.
 
 Вариант B — Docker:
@@ -82,20 +82,25 @@ cp target/contactbook.war "$CATALINA_HOME/webapps/"
 
 ### 4. Параметры подключения
 
-По умолчанию приложение подключается к `jdbc:mysql://localhost:3306/contactbook`
+По умолчанию приложение подключается к
+`jdbc:mysql://localhost:3306/testdeepseekv1?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC`
 пользователем `contactbook`/`contactbook`. Значения можно переопределить переменными
 окружения (удобно для Tomcat) или JVM-свойствами:
 
 | Переменная окружения | JVM-свойство | По умолчанию |
 |----------------------|--------------|--------------|
-| `CONTACTBOOK_DB_URL` | `contactbook.db.url` | `jdbc:mysql://localhost:3306/contactbook?...` |
+| `CONTACTBOOK_DB_URL` | `contactbook.db.url` | `jdbc:mysql://localhost:3306/testdeepseekv1?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC` |
 | `CONTACTBOOK_DB_USER` | `contactbook.db.user` | `contactbook` |
 | `CONTACTBOOK_DB_PASSWORD` | `contactbook.db.password` | `contactbook` |
+
+Если база и пользователь уже созданы и пароль отличается от `contactbook`, задайте
+`CONTACTBOOK_DB_USER` и `CONTACTBOOK_DB_PASSWORD`; схему в этом случае выполняйте
+от имени пользователя с правами на `testdeepseekv1`.
 
 Пример `setenv.bat` для Windows (файл `%CATALINA_HOME%\bin\setenv.bat`):
 
 ```bat
-set "CONTACTBOOK_DB_URL=jdbc:mysql://localhost:3306/contactbook?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true"
+set "CONTACTBOOK_DB_URL=jdbc:mysql://localhost:3306/testdeepseekv1?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
 set "CONTACTBOOK_DB_USER=contactbook"
 set "CONTACTBOOK_DB_PASSWORD=contactbook"
 ```
@@ -103,7 +108,7 @@ set "CONTACTBOOK_DB_PASSWORD=contactbook"
 Пример `setenv.sh` для Linux/macOS:
 
 ```bash
-export CONTACTBOOK_DB_URL='jdbc:mysql://localhost:3306/contactbook?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true'
+export CONTACTBOOK_DB_URL='jdbc:mysql://localhost:3306/testdeepseekv1?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC'
 export CONTACTBOOK_DB_USER='contactbook'
 export CONTACTBOOK_DB_PASSWORD='contactbook'
 ```
@@ -188,7 +193,7 @@ contactbook/
 |---------|-------------------|
 | `Communications link failure` | MySQL не запущен или неверен порт в `CONTACTBOOK_DB_URL`. |
 | `Access denied for user 'contactbook'` | Не выполнен `database/schema.sql` или неверный пароль. |
-| `Unknown database 'contactbook'` | Не создана база — выполните скрипт. |
+| `Unknown database 'testdeepseekv1'` | Не создана база — выполните скрипт. |
 | `Schema-validation: missing table [contacts]` | Схема не создана либо `hibernate.hbm2ddl.auto` изменён. |
 | `ClassNotFoundException: jakarta.faces.webapp.FacesServlet` | WAR развёрнут в Tomcat 9 или старее; нужен Tomcat 10.1+. |
 | `ViewExpiredException` после перезапуска | Сессия/состояние видов очищены; обновите страницу. |

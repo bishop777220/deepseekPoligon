@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: contactbook
+      MYSQL_DATABASE: testdeepseekv1
       MYSQL_USER: contactbook
       MYSQL_PASSWORD: contactbook
     ports:
