@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and test (JDK 17)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Build WAR and run tests
+        run: ./mvnw -B -ntp verify
+
+      - name: Upload WAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: contactbook-war
+          path: target/contactbook.war
+          if-no-files-found: error

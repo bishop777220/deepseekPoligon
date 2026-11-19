@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="jakarta.faces.html"
+        xmlns:f="jakarta.faces.core"
+        xmlns:ui="jakarta.faces.facelets"
+        contentType="text/html"
+        encoding="UTF-8"
+        locale="ru">
+    <ui:insert name="metadata"/>
+    <html lang="ru">
+    <h:head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <title><ui:insert name="title">#{msg['app.title']}</ui:insert></title>
+        <h:outputStylesheet library="css" name="app.css"/>
+    </h:head>
+    <h:body styleClass="body">
+    <header class="topbar">
+        <div class="container topbar-inner">
+            <h:link outcome="index" styleClass="brand" value="#{msg['app.title']}"/>
+            <nav class="nav" aria-label="#{msg['nav.contacts']}">
+                <h:link outcome="index" styleClass="nav-link" value="#{msg['nav.contacts']}"/>
+                <h:link outcome="edit" styleClass="btn btn-primary btn-sm" value="#{msg['nav.add']}"/>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container main">
+        <h:messages globalOnly="true"
+                    layout="list"
+                    styleClass="messages"
+                    infoClass="message message-info"
+                    warnClass="message message-warn"
+                    errorClass="message message-error"
+                    fatalClass="message message-error"/>
+        <ui:insert name="content"/>
+    </main>
+
+    <footer class="footer">
+        <div class="container">#{msg['footer.text']}</div>
+    </footer>
+    </h:body>
+    </html>
+</f:view>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/WEB-INF/templates/layout.xhtml">
+
+    <ui:define name="title">#{msg['contacts.title']}</ui:define>
+
+    <ui:define name="content">
+        <section class="page-head">
+            <div>
+                <h1>#{msg['contacts.title']}</h1>
+                <p class="muted">#{msg['contacts.subtitle']}</p>
+            </div>
+            <h:link outcome="edit" styleClass="btn btn-primary" value="#{msg['action.add']}"/>
+        </section>
+
+        <h:form id="searchForm" styleClass="card toolbar">
+            <div class="field grow">
+                <h:outputLabel for="search" value="#{msg['contacts.search']}"/>
+                <h:inputText id="search"
+                             value="#{contactListBean.search}"
+                             styleClass="input"
+                             placeholder="#{msg['contacts.search.placeholder']}"/>
+            </div>
+            <div class="field">
+                <h:outputLabel for="category" value="#{msg['contacts.filter.category']}"/>
+                <h:selectOneMenu id="category" value="#{contactListBean.category}" styleClass="input">
+                    <f:selectItem itemLabel="#{msg['contacts.filter.all']}"
+                                  itemValue="#{null}"
+                                  noSelectionOption="true"/>
+                    <f:selectItems value="#{contactListBean.categories}"
+                                   var="category"
+                                   itemValue="#{category}"
+                                   itemLabel="#{msg[category.labelKey]}"/>
+                </h:selectOneMenu>
+            </div>
+            <div class="toolbar-actions">
+                <h:commandButton value="#{msg['action.search']}"
+                                 action="#{contactListBean.search}"
+                                 styleClass="btn btn-primary"/>
+                <h:commandButton value="#{msg['action.reset']}"
+                                 action="#{contactListBean.reset}"
+                                 styleClass="btn btn-ghost"
+                                 immediate="true"/>
+            </div>
+        </h:form>
+
+        <h:form id="listForm">
+            <div class="list-summary">
+                <span>
+                    <h:outputFormat value="#{msg['contacts.total']}">
+                        <f:param value="#{contactListBean.total}"/>
+                    </h:outputFormat>
+                </span>
+                <span>
+                    <h:outputFormat value="#{msg['contacts.range']}" rendered="#{contactListBean.total > 0}">
+                        <f:param value="#{contactListBean.from}"/>
+                        <f:param value="#{contactListBean.to}"/>
+                    </h:outputFormat>
+                </span>
+            </div>
+
+            <ui:fragment rendered="#{not empty contactListBean.contacts}">
+                <div class="card table-wrap">
+                <h:dataTable value="#{contactListBean.contacts}"
+                             var="contact"
+                             styleClass="table"
+                             headerClass="th"
+                             rowClasses="row,row-alt"
+                             columnClasses="col-name,col-contact,col-category,col-actions">
+                    <h:column>
+                        <f:facet name="header">#{msg['table.name']}</f:facet>
+                        <div class="person">
+                            <span class="avatar">#{(empty contact.firstName ? '?' : contact.firstName.substring(0, 1).toUpperCase())}</span>
+                            <div>
+                                <strong>#{contact.lastName} #{contact.firstName}</strong>
+                                <h:panelGroup layout="block" styleClass="muted small"
+                                              rendered="#{not empty contact.organization}">
+                                    #{contact.organization}
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">#{msg['table.contact']}</f:facet>
+                        <div>#{contact.email}</div>
+                        <h:panelGroup layout="block" styleClass="muted small"
+                                      rendered="#{not empty contact.phone}">
+                            #{contact.phone}
+                        </h:panelGroup>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">#{msg['table.category']}</f:facet>
+                        <span class="badge #{contact.category.cssClass}">#{msg[contact.category.labelKey]}</span>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">#{msg['table.actions']}</f:facet>
+                        <div class="row-actions">
+                            <h:link outcome="edit" value="#{msg['action.edit']}" styleClass="link">
+                                <f:param name="id" value="#{contact.id}"/>
+                            </h:link>
+                            <h:commandLink action="#{contactListBean.delete(contact)}"
+                                           value="#{msg['action.delete']}"
+                                           styleClass="link danger"
+                                           onclick="return confirm('#{msg['confirm.delete']}');"/>
+                        </div>
+                    </h:column>
+                </h:dataTable>
+                </div>
+            </ui:fragment>
+
+            <ui:fragment rendered="#{empty contactListBean.contacts}">
+                <div class="card empty">
+                    <div class="empty-icon">☺</div>
+                    <h2>#{msg['contacts.empty.title']}</h2>
+                    <p class="muted">#{msg['contacts.empty.text']}</p>
+                    <h:link outcome="edit" styleClass="btn btn-primary" value="#{msg['action.add']}"/>
+                </div>
+            </ui:fragment>
+
+            <ui:fragment rendered="#{contactListBean.total > 0}">
+                <div class="pager">
+                    <h:commandButton value="#{msg['pager.previous']}"
+                                     action="#{contactListBean.previous}"
+                                     disabled="#{not contactListBean.hasPrevious}"
+                                     styleClass="btn btn-sm"/>
+                    <h:outputFormat value="#{msg['pager.status']}">
+                        <f:param value="#{contactListBean.page}"/>
+                        <f:param value="#{contactListBean.pageCount}"/>
+                    </h:outputFormat>
+                    <h:commandButton value="#{msg['pager.next']}"
+                                     action="#{contactListBean.next}"
+                                     disabled="#{not contactListBean.hasNext}"
+                                     styleClass="btn btn-sm"/>
+                </div>
+            </ui:fragment>
+        </h:form>
+    </ui:define>
+</ui:composition>

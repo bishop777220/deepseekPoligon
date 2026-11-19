@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/WEB-INF/templates/layout.xhtml">
+
+    <ui:define name="metadata">
+        <f:metadata>
+            <f:viewParam name="id" value="#{contactEditBean.id}"/>
+            <f:viewAction action="#{contactEditBean.init}"/>
+        </f:metadata>
+    </ui:define>
+
+    <ui:define name="title">
+        #{contactEditBean.id == null ? msg['edit.create.title'] : msg['edit.edit.title']}
+    </ui:define>
+
+    <ui:define name="content">
+        <section class="page-head">
+            <div>
+                <h1>#{contactEditBean.id == null ? msg['edit.create.title'] : msg['edit.edit.title']}</h1>
+                <p class="muted">#{msg['edit.subtitle']}</p>
+            </div>
+            <h:link outcome="index" styleClass="btn btn-ghost" value="#{msg['action.back']}"/>
+        </section>
+
+        <h:form id="editForm" styleClass="card form">
+            <div class="form-grid">
+                <div class="field">
+                    <h:outputLabel for="firstName" value="#{msg['contact.firstName']} *"/>
+                    <h:inputText id="firstName"
+                                 value="#{contactEditBean.contact.firstName}"
+                                 styleClass="input"
+                                 maxlength="80"/>
+                    <h:message for="firstName" styleClass="field-error"/>
+                </div>
+                <div class="field">
+                    <h:outputLabel for="lastName" value="#{msg['contact.lastName']} *"/>
+                    <h:inputText id="lastName"
+                                 value="#{contactEditBean.contact.lastName}"
+                                 styleClass="input"
+                                 maxlength="80"/>
+                    <h:message for="lastName" styleClass="field-error"/>
+                </div>
+
+                <div class="field field-full">
+                    <h:outputLabel for="email" value="#{msg['contact.email']} *"/>
+                    <h:inputText id="email"
+                                 value="#{contactEditBean.contact.email}"
+                                 styleClass="input"
+                                 maxlength="160"/>
+                    <h:message for="email" styleClass="field-error"/>
+                </div>
+
+                <div class="field">
+                    <h:outputLabel for="phone" value="#{msg['contact.phone']}"/>
+                    <h:inputText id="phone"
+                                 value="#{contactEditBean.contact.phone}"
+                                 styleClass="input"
+                                 maxlength="40"/>
+                    <h:message for="phone" styleClass="field-error"/>
+                </div>
+                <div class="field">
+                    <h:outputLabel for="organization" value="#{msg['contact.organization']}"/>
+                    <h:inputText id="organization"
+                                 value="#{contactEditBean.contact.organization}"
+                                 styleClass="input"
+                                 maxlength="120"/>
+                    <h:message for="organization" styleClass="field-error"/>
+                </div>
+
+                <div class="field">
+                    <h:outputLabel for="category" value="#{msg['contact.category']}"/>
+                    <h:selectOneMenu id="category"
+                                     value="#{contactEditBean.contact.category}"
+                                     styleClass="input">
+                        <f:selectItems value="#{contactEditBean.categories}"
+                                       var="category"
+                                       itemValue="#{category}"
+                                       itemLabel="#{msg[category.labelKey]}"/>
+                    </h:selectOneMenu>
+                    <h:message for="category" styleClass="field-error"/>
+                </div>
+
+                <div class="field field-full">
+                    <h:outputLabel for="notes" value="#{msg['contact.notes']}"/>
+                    <h:inputTextarea id="notes"
+                                     value="#{contactEditBean.contact.notes}"
+                                     styleClass="input textarea"
+                                     rows="5"/>
+                    <h:message for="notes" styleClass="field-error"/>
+                </div>
+            </div>
+
+            <p class="hint">#{msg['edit.required.hint']}</p>
+
+            <div class="form-actions">
+                <h:commandButton value="#{msg['action.save']}"
+                                 action="#{contactEditBean.save}"
+                                 styleClass="btn btn-primary"/>
+                <h:commandLink value="#{msg['action.cancel']}"
+                               action="#{contactEditBean.cancel}"
+                               styleClass="btn btn-ghost"
+                               immediate="true"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

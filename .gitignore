@@ -1,0 +1,27 @@
+target/
+*.war
+*.log
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local configuration / secrets
+.env
+*.local
+
+# JVM crash dumps
+hs_err_pid*
+*.hprof
+
+# Maven wrapper timing data
+.mvn/timing.properties
