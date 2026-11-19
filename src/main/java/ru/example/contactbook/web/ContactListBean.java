@@ -129,6 +129,10 @@ public class ContactListBean implements Serializable {
         return ContactCategory.values();
     }
 
+    public int getCategoryCount() {
+        return ContactCategory.values().length;
+    }
+
     public boolean isHasNext() {
         return page < getPageCount();
     }

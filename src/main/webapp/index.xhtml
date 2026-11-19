@@ -10,14 +10,45 @@
 
     <ui:define name="content">
         <section class="page-head">
-            <div>
+            <div class="page-head-copy">
+                <p class="eyebrow">
+                    <span class="eyebrow-mark" aria-hidden="true"></span>
+                    #{msg['contacts.eyebrow']} <span class="eyebrow-sep">/</span> #{msg['nav.contacts']}
+                </p>
                 <h1>#{msg['contacts.title']}</h1>
-                <p class="muted">#{msg['contacts.subtitle']}</p>
+                <p class="lead">#{msg['contacts.subtitle']}</p>
             </div>
-            <h:link outcome="edit" styleClass="btn btn-primary" value="#{msg['action.add']}"/>
+            <h:link outcome="edit" styleClass="btn btn-primary btn-lg btn-add" value="#{msg['action.add']}"/>
         </section>
 
-        <h:form id="searchForm" styleClass="card toolbar">
+        <section class="tile-grid" aria-label="#{msg['contacts.eyebrow']}">
+            <article class="tile tile-blue tile-wide">
+                <span class="tile-kicker">#{msg['contacts.tile.total']}</span>
+                <strong class="tile-value">#{contactListBean.total}</strong>
+                <span class="tile-meta">#{msg['contacts.tile.total.meta']}</span>
+            </article>
+            <article class="tile tile-teal">
+                <span class="tile-kicker">#{msg['contacts.tile.page']}</span>
+                <strong class="tile-value">#{contactListBean.page}</strong>
+                <span class="tile-meta">
+                    <h:outputFormat value="#{msg['contacts.tile.page.meta']}">
+                        <f:param value="#{contactListBean.pageCount}"/>
+                    </h:outputFormat>
+                </span>
+            </article>
+            <article class="tile tile-amber">
+                <span class="tile-kicker">#{msg['contacts.tile.categories']}</span>
+                <strong class="tile-value">#{contactListBean.categoryCount}</strong>
+                <span class="tile-meta">#{msg['contacts.tile.categories.meta']}</span>
+            </article>
+            <article class="tile tile-violet">
+                <span class="tile-kicker">#{msg['contacts.tile.pageSize']}</span>
+                <strong class="tile-value">#{contactListBean.pageSize}</strong>
+                <span class="tile-meta">#{msg['contacts.tile.pageSize.meta']}</span>
+            </article>
+        </section>
+
+        <h:form id="searchForm" styleClass="panel toolbar">
             <div class="field grow">
                 <h:outputLabel for="search" value="#{msg['contacts.search']}"/>
                 <h:inputText id="search"
@@ -40,22 +71,22 @@
             <div class="toolbar-actions">
                 <h:commandButton value="#{msg['action.search']}"
                                  action="#{contactListBean.search}"
-                                 styleClass="btn btn-primary"/>
+                                 styleClass="btn btn-primary btn-search"/>
                 <h:commandButton value="#{msg['action.reset']}"
                                  action="#{contactListBean.reset}"
-                                 styleClass="btn btn-ghost"
+                                 styleClass="btn btn-ghost btn-reset"
                                  immediate="true"/>
             </div>
         </h:form>
 
         <h:form id="listForm">
             <div class="list-summary">
-                <span>
+                <span class="list-total">
                     <h:outputFormat value="#{msg['contacts.total']}">
                         <f:param value="#{contactListBean.total}"/>
                     </h:outputFormat>
                 </span>
-                <span>
+                <span class="list-range">
                     <h:outputFormat value="#{msg['contacts.range']}" rendered="#{contactListBean.total > 0}">
                         <f:param value="#{contactListBean.from}"/>
                         <f:param value="#{contactListBean.to}"/>
@@ -64,7 +95,7 @@
             </div>
 
             <ui:fragment rendered="#{not empty contactListBean.contacts}">
-                <div class="card table-wrap">
+                <div class="panel table-wrap">
                 <h:dataTable value="#{contactListBean.contacts}"
                              var="contact"
                              styleClass="table"
@@ -74,10 +105,10 @@
                     <h:column>
                         <f:facet name="header">#{msg['table.name']}</f:facet>
                         <div class="person">
-                            <span class="avatar">#{(empty contact.firstName ? '?' : contact.firstName.substring(0, 1).toUpperCase())}</span>
-                            <div>
-                                <strong>#{contact.lastName} #{contact.firstName}</strong>
-                                <h:panelGroup layout="block" styleClass="muted small"
+                            <span class="avatar" aria-hidden="true">#{(empty contact.firstName ? '?' : contact.firstName.substring(0, 1).toUpperCase())}</span>
+                            <div class="person-copy">
+                                <strong class="person-name">#{contact.lastName} #{contact.firstName}</strong>
+                                <h:panelGroup layout="block" styleClass="person-org"
                                               rendered="#{not empty contact.organization}">
                                     #{contact.organization}
                                 </h:panelGroup>
@@ -86,8 +117,8 @@
                     </h:column>
                     <h:column>
                         <f:facet name="header">#{msg['table.contact']}</f:facet>
-                        <div>#{contact.email}</div>
-                        <h:panelGroup layout="block" styleClass="muted small"
+                        <div class="contact-line">#{contact.email}</div>
+                        <h:panelGroup layout="block" styleClass="contact-line contact-phone"
                                       rendered="#{not empty contact.phone}">
                             #{contact.phone}
                         </h:panelGroup>
@@ -99,12 +130,12 @@
                     <h:column>
                         <f:facet name="header">#{msg['table.actions']}</f:facet>
                         <div class="row-actions">
-                            <h:link outcome="edit" value="#{msg['action.edit']}" styleClass="link">
+                            <h:link outcome="edit" value="#{msg['action.edit']}" styleClass="link link-edit">
                                 <f:param name="id" value="#{contact.id}"/>
                             </h:link>
                             <h:commandLink action="#{contactListBean.delete(contact)}"
                                            value="#{msg['action.delete']}"
-                                           styleClass="link danger"
+                                           styleClass="link link-delete"
                                            onclick="return confirm('#{msg['confirm.delete']}');"/>
                         </div>
                     </h:column>
@@ -113,28 +144,30 @@
             </ui:fragment>
 
             <ui:fragment rendered="#{empty contactListBean.contacts}">
-                <div class="card empty">
-                    <div class="empty-icon">☺</div>
+                <div class="panel empty">
+                    <div class="empty-icon" aria-hidden="true">☺</div>
                     <h2>#{msg['contacts.empty.title']}</h2>
                     <p class="muted">#{msg['contacts.empty.text']}</p>
-                    <h:link outcome="edit" styleClass="btn btn-primary" value="#{msg['action.add']}"/>
+                    <h:link outcome="edit" styleClass="btn btn-primary btn-add" value="#{msg['action.add']}"/>
                 </div>
             </ui:fragment>
 
             <ui:fragment rendered="#{contactListBean.total > 0}">
-                <div class="pager">
+                <div class="pager panel">
                     <h:commandButton value="#{msg['pager.previous']}"
                                      action="#{contactListBean.previous}"
                                      disabled="#{not contactListBean.hasPrevious}"
-                                     styleClass="btn btn-sm"/>
-                    <h:outputFormat value="#{msg['pager.status']}">
-                        <f:param value="#{contactListBean.page}"/>
-                        <f:param value="#{contactListBean.pageCount}"/>
-                    </h:outputFormat>
+                                     styleClass="btn btn-sm btn-pager"/>
+                    <span class="pager-status">
+                        <h:outputFormat value="#{msg['pager.status']}">
+                            <f:param value="#{contactListBean.page}"/>
+                            <f:param value="#{contactListBean.pageCount}"/>
+                        </h:outputFormat>
+                    </span>
                     <h:commandButton value="#{msg['pager.next']}"
                                      action="#{contactListBean.next}"
                                      disabled="#{not contactListBean.hasNext}"
-                                     styleClass="btn btn-sm"/>
+                                     styleClass="btn btn-sm btn-pager"/>
                 </div>
             </ui:fragment>
         </h:form>

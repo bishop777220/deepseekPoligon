@@ -12,16 +12,23 @@
     <h:head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="theme-color" content="#1f1f1f"/>
         <title><ui:insert name="title">#{msg['app.title']}</ui:insert></title>
         <h:outputStylesheet library="css" name="app.css"/>
     </h:head>
     <h:body styleClass="body">
     <header class="topbar">
         <div class="container topbar-inner">
-            <h:link outcome="index" styleClass="brand" value="#{msg['app.title']}"/>
+            <h:link outcome="index" styleClass="brand">
+                <span class="brand-mark" aria-hidden="true">К</span>
+                <span class="brand-copy">
+                    <span class="brand-name">#{msg['app.title']}</span>
+                    <span class="brand-tagline">#{msg['app.tagline']}</span>
+                </span>
+            </h:link>
             <nav class="nav" aria-label="#{msg['nav.contacts']}">
                 <h:link outcome="index" styleClass="nav-link" value="#{msg['nav.contacts']}"/>
-                <h:link outcome="edit" styleClass="btn btn-primary btn-sm" value="#{msg['nav.add']}"/>
+                <h:link outcome="edit" styleClass="btn btn-primary btn-sm btn-add" value="#{msg['nav.add']}"/>
             </nav>
         </div>
     </header>
@@ -38,7 +45,10 @@
     </main>
 
     <footer class="footer">
-        <div class="container">#{msg['footer.text']}</div>
+        <div class="container footer-inner">
+            <span class="footer-title">#{msg['app.title']}</span>
+            <span class="footer-meta">#{msg['footer.text']}</span>
+        </div>
     </footer>
     </h:body>
     </html>
