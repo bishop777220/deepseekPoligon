@@ -1,18 +1,28 @@
 package ru.example.contactbook.web;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import org.primefaces.component.datatable.DataTable;
+import org.primefaces.model.FilterMeta;
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortMeta;
 import ru.example.contactbook.model.Contact;
 import ru.example.contactbook.model.ContactCategory;
 import ru.example.contactbook.service.ContactService;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Backing bean for the searchable, paginated contact list.
+ * Backing bean for the searchable contact list.
+ *
+ * <p>The table is backed by a PrimeFaces {@link LazyDataModel}: only the rows
+ * of the current page are read from the database.</p>
  */
 @Named("contactListBean")
 @ViewScoped
@@ -26,38 +36,46 @@ public class ContactListBean implements Serializable {
 
     private String search = "";
     private ContactCategory category;
-    private int page = 1;
-    private List<Contact> contacts = List.of();
+    private int first;
     private long total;
+    private LazyDataModel<Contact> lazyContacts;
 
     @PostConstruct
     void initialize() {
-        load();
-    }
+        lazyContacts = new LazyDataModel<>() {
+            @Override
+            public int count(Map<String, FilterMeta> filterBy) {
+                return Math.toIntExact(contactService.count(search, category));
+            }
 
-    public void load() {
-        if (page < 1) {
-            page = 1;
-        }
-        long count = contactService.count(search, category);
-        long pages = pageCount(count);
-        if (page > pages) {
-            page = (int) pages;
-        }
-        total = count;
-        contacts = contactService.findPage(search, category, (page - 1) * PAGE_SIZE, PAGE_SIZE);
+            @Override
+            public List<Contact> load(int first, int pageSize,
+                                      Map<String, SortMeta> sortBy,
+                                      Map<String, FilterMeta> filterBy) {
+                setRowCount(count(filterBy));
+                return contactService.findPage(search, category, first, pageSize);
+            }
+
+            @Override
+            public String getRowKey(Contact contact) {
+                return contact == null || contact.getId() == null ? null : contact.getId().toString();
+            }
+        };
+        refreshTotal();
     }
 
     public void search() {
-        page = 1;
-        load();
+        first = 0;
+        resetTablePage();
+        refreshTotal();
     }
 
     public void reset() {
         search = "";
         category = null;
-        page = 1;
-        load();
+        first = 0;
+        resetTablePage();
+        refreshTotal();
     }
 
     public void delete(Contact contact) {
@@ -65,27 +83,28 @@ public class ContactListBean implements Serializable {
             return;
         }
         if (contactService.delete(contact.getId())) {
-            Messages.addFlashInfo("msg.deleted");
-            if (contacts.size() == 1 && page > 1) {
-                page--;
+            Messages.addInfo("msg.deleted");
+            refreshTotal();
+            if (first >= total && first > 0) {
+                first = Math.max(0, first - PAGE_SIZE);
             }
         } else {
-            Messages.addFlashError("msg.notFound");
-        }
-        load();
-    }
-
-    public void next() {
-        if (isHasNext()) {
-            page++;
-            load();
+            Messages.addError("msg.notFound");
         }
     }
 
-    public void previous() {
-        if (isHasPrevious()) {
-            page--;
-            load();
+    private void refreshTotal() {
+        total = contactService.count(search, category);
+    }
+
+    private void resetTablePage() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (context == null) {
+            return;
+        }
+        UIComponent component = context.getViewRoot().findComponent("contactsForm:contactsTable");
+        if (component instanceof DataTable dataTable) {
+            dataTable.setFirst(0);
         }
     }
 
@@ -105,12 +124,12 @@ public class ContactListBean implements Serializable {
         this.category = category;
     }
 
-    public int getPage() {
-        return page;
+    public int getFirst() {
+        return first;
     }
 
-    public List<Contact> getContacts() {
-        return contacts;
+    public void setFirst(int first) {
+        this.first = Math.max(0, first);
     }
 
     public long getTotal() {
@@ -121,10 +140,6 @@ public class ContactListBean implements Serializable {
         return PAGE_SIZE;
     }
 
-    public long getPageCount() {
-        return pageCount(total);
-    }
-
     public ContactCategory[] getCategories() {
         return ContactCategory.values();
     }
@@ -133,23 +148,7 @@ public class ContactListBean implements Serializable {
         return ContactCategory.values().length;
     }
 
-    public boolean isHasNext() {
-        return page < getPageCount();
-    }
-
-    public boolean isHasPrevious() {
-        return page > 1;
-    }
-
-    public long getFrom() {
-        return total == 0 ? 0 : (long) (page - 1) * PAGE_SIZE + 1;
-    }
-
-    public long getTo() {
-        return Math.min((long) page * PAGE_SIZE, total);
-    }
-
-    private static long pageCount(long count) {
-        return Math.max(1, (count + PAGE_SIZE - 1) / PAGE_SIZE);
+    public LazyDataModel<Contact> getLazyContacts() {
+        return lazyContacts;
     }
 }

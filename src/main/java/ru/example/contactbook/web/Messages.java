@@ -26,6 +26,14 @@ public final class Messages {
         addFlash(FacesMessage.SEVERITY_ERROR, key, parameters);
     }
 
+    public static void addInfo(String key, Object... parameters) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (context == null) {
+            return;
+        }
+        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, text(key, parameters), null));
+    }
+
     public static void addError(String clientId, String key, Object... parameters) {
         FacesContext context = FacesContext.getCurrentInstance();
         if (context == null) {

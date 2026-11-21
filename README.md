@@ -4,9 +4,9 @@
 
 Веб-приложение для ведения списка контактов: поиск, фильтрация по категориям, постраничный вывод,
 создание, редактирование и удаление записей. Полноценный CRUD-пример на стеке
-**Jakarta EE 10 / JSF 4 / CDI 4 / JPA 3.1 / MySQL 8 / Tomcat 10.1**.
+**Jakarta EE 10 / JSF 4 / PrimeFaces 16 / CDI 4 / JPA 3.1 / MySQL 8 / Tomcat 10.1**.
 
-Интерфейс оформлен в стиле **Metro UI**: плитки, плоские панели и строгая типографика Segoe UI.
+Интерфейс построен на **PrimeFaces 16** со стандартной темой **Saga Blue**.
 
 ![Список контактов](docs/screenshot.png)
 
@@ -15,7 +15,7 @@
 | Слой | Технология |
 |------|------------|
 | Контейнер | Apache Tomcat 10.1 (Servlet 6.0, Jakarta EE 10 namespace) |
-| UI | Jakarta Faces 4.0 (Mojarra 4.0.5), Facelets/XHTML, HTML5, CSS в стиле Metro UI |
+| UI | Jakarta Faces 4.0 (Mojarra 4.0.5), PrimeFaces 16 (тема Saga Blue), Facelets/XHTML |
 | CDI | Weld 5.1.3 (`weld-servlet-shaded`) |
 | Персистентность | Jakarta Persistence 3.1, Hibernate ORM 6.4.4, HikariCP |
 | Валидация | Jakarta Bean Validation 3.0, Hibernate Validator 8.0 |
@@ -34,7 +34,7 @@
 - Проверка уникальности e-mail без учёта регистра.
 - Удаление с подтверждением и flash-сообщениями после redirect.
 - Русский интерфейс, UTF-8 на всех уровнях, адаптивная вёрстка.
-- Оформление в стиле Metro UI: плитки-показатели, плоские панели, тёмный app bar.
+- Стандартные компоненты PrimeFaces: `p:dataTable` с lazy-пагинацией, `p:card`, `p:toolbar`, `p:confirmDialog`.
 - Собственная страница ошибки.
 - Unit-тесты персистентного слоя на H2 в режиме MySQL (без внешней БД).
 

@@ -4,6 +4,7 @@
         xmlns:h="jakarta.faces.html"
         xmlns:f="jakarta.faces.core"
         xmlns:ui="jakarta.faces.facelets"
+        xmlns:p="http://primefaces.org/ui"
         contentType="text/html"
         encoding="UTF-8"
         locale="ru">
@@ -12,42 +13,48 @@
     <h:head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <meta name="theme-color" content="#1f1f1f"/>
         <title><ui:insert name="title">#{msg['app.title']}</ui:insert></title>
         <h:outputStylesheet library="css" name="app.css"/>
     </h:head>
-    <h:body styleClass="body">
-    <header class="topbar">
-        <div class="container topbar-inner">
-            <h:link outcome="index" styleClass="brand">
-                <span class="brand-mark" aria-hidden="true">К</span>
-                <span class="brand-copy">
-                    <span class="brand-name">#{msg['app.title']}</span>
-                    <span class="brand-tagline">#{msg['app.tagline']}</span>
-                </span>
-            </h:link>
-            <nav class="nav" aria-label="#{msg['nav.contacts']}">
-                <h:link outcome="index" styleClass="nav-link" value="#{msg['nav.contacts']}"/>
-                <h:link outcome="edit" styleClass="btn btn-primary btn-sm btn-add" value="#{msg['nav.add']}"/>
-            </nav>
+    <h:body>
+    <header class="app-header">
+        <div class="app-container">
+            <p:toolbar styleClass="app-toolbar">
+                <f:facet name="left">
+                    <h:link outcome="index" styleClass="app-brand">
+                        <p:avatar label="К" shape="circle" size="large" styleClass="app-brand-avatar"/>
+                        <span class="app-brand-copy">
+                            <span class="app-brand-title">#{msg['app.title']}</span>
+                            <span class="app-brand-subtitle">#{msg['app.tagline']}</span>
+                        </span>
+                    </h:link>
+                </f:facet>
+                <f:facet name="right">
+                    <div class="app-nav">
+                        <p:button outcome="index"
+                                  value="#{msg['nav.contacts']}"
+                                  icon="pi pi-users"
+                                  styleClass="ui-button-flat"/>
+                        <p:button outcome="edit"
+                                  value="#{msg['nav.add']}"
+                                  icon="pi pi-plus"/>
+                    </div>
+                </f:facet>
+            </p:toolbar>
         </div>
     </header>
 
-    <main class="container main">
-        <h:messages globalOnly="true"
-                    layout="list"
-                    styleClass="messages"
-                    infoClass="message message-info"
-                    warnClass="message message-warn"
-                    errorClass="message message-error"
-                    fatalClass="message message-error"/>
-        <ui:insert name="content"/>
+    <main class="app-main">
+        <div class="app-container">
+            <p:growl id="growl" showDetail="true" life="4000"/>
+            <ui:insert name="content"/>
+        </div>
     </main>
 
-    <footer class="footer">
-        <div class="container footer-inner">
-            <span class="footer-title">#{msg['app.title']}</span>
-            <span class="footer-meta">#{msg['footer.text']}</span>
+    <footer class="app-footer">
+        <div class="app-container app-footer-inner">
+            <span class="app-footer-title">#{msg['app.title']}</span>
+            <span class="app-footer-meta">#{msg['footer.text']}</span>
         </div>
     </footer>
     </h:body>

@@ -7,19 +7,25 @@ import java.util.Locale;
  */
 public enum ContactCategory {
 
-    WORK("category.work"),
-    FAMILY("category.family"),
-    FRIEND("category.friend"),
-    OTHER("category.other");
+    WORK("category.work", "info"),
+    FAMILY("category.family", "danger"),
+    FRIEND("category.friend", "success"),
+    OTHER("category.other", "secondary");
 
     private final String labelKey;
+    private final String severity;
 
-    ContactCategory(String labelKey) {
+    ContactCategory(String labelKey, String severity) {
         this.labelKey = labelKey;
+        this.severity = severity;
     }
 
     public String getLabelKey() {
         return labelKey;
+    }
+
+    public String getSeverity() {
+        return severity;
     }
 
     public String getCssClass() {
